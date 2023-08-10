@@ -13,6 +13,7 @@ import Button from '@mui/material/ButtonBase';
 import Image from "next/image";
 import { useSession } from "next-auth/react"
 import End from "../components/End";
+import { useSelector } from 'react-redux';
 
 
 async function postData(data) {
@@ -51,6 +52,7 @@ async function postData(data) {
 
 
 export default function Step4(){
+  const isOpen = useSelector(state => state.isOpen.value);
   const [show, setShow] = useState(false);
   
   const { actions, state } = useStateMachine({ updateAction });
@@ -91,14 +93,6 @@ export default function Step4(){
     sideFormClassAdd = "col-side-form-ifopen";
     stepFormClassAdd = "col-step-form-ifopen";
   }
-
-  const [rerender, setRerender] = useState(false);
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setRerender(!rerender);
-    }, 30);
-    return () => clearTimeout(timer);
-  }, [rerender]);
 
 
   if (session) {

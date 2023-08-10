@@ -1,5 +1,3 @@
-// This is our base page layout - See it is used in pages_app.js
-
 export default function Layout({ children }) {
   
   return (

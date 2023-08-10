@@ -4,17 +4,19 @@ import { useRouter} from "next/router"
 import { useStateMachine } from "little-state-machine";
 import updateAction from "../updateAction";
 import Navbar from "../components/navbar";
-import SideForm, { isOpen } from "../components/side_form";
+import SideForm from "../components/side_form";
 import SelectByButtons from "../components/select_by_buttons";
 import Textarea from "../components/textarea";
 import Button from '@mui/material/ButtonBase';
 import Image from "next/image";
 import Toggle from "../components/Toggle";
 import { useSession } from "next-auth/react"
+import { useSelector } from 'react-redux';
 
 
 
 export default function Step2() {
+  const isOpen = useSelector(state => state.isOpen.value);
   const { actions, state } = useStateMachine({ updateAction });
   const { control, handleSubmit, register} = useForm({defaultValues: state.yourDetails});
   const router = useRouter();
@@ -40,14 +42,6 @@ export default function Step2() {
     sideFormClassAdd = "col-side-form-ifopen";
     stepFormClassAdd = "col-step-form-ifopen";
   }
-
-  const [rerender, setRerender] = useState(false);
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setRerender(!rerender);
-    }, 30);
-    return () => clearTimeout(timer);
-  }, [rerender]);
 
   if (session) {
     return (

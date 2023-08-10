@@ -1,10 +1,12 @@
 import Image from "next/image";
 import { useState } from "react";
 import { useWatch } from "react-hook-form";
-
-export var isOpen = false;
+import { useSelector, useDispatch } from "react-redux";
+import { taggleCol } from "../redux/sideColState";
 
 export default function SideForm({register, control}){
+  const isOpen = useSelector((state) => state.isOpen.value);
+  const dispatch = useDispatch()
 
   const file_ipoi = useWatch({control, name: "קובץ יפויי כוח"});
   const file_id = useWatch({control, name: "קובץ תז"});
@@ -16,25 +18,9 @@ export default function SideForm({register, control}){
   const city = useWatch({control, name: "עיר"});
   const institution = useWatch({control, name: "מסגרת נוכחית"});
 
-  const [rerender, setRerender] = useState(false);
-
-  const handleClick = (e) => {
-    isOpen = !isOpen;
-
-    let col_side_forms = document.getElementsByClassName("col-side-form");
-    for (let i = 0 ; i < col_side_forms.length ; i++) {
-      col_side_forms[i].classList.remove(isOpen ? "col-side-form-ifclosed" : "col-side-form-ifopen");
-      col_side_forms[i].classList.add(isOpen ? "col-side-form-ifopen" : "col-side-form-ifclosed");
-    }
-
-    let col_step_forms = document.getElementsByClassName("col-step-form");
-    for (let i = 0 ; i < col_step_forms.length ; i++) {
-      col_step_forms[i].classList.remove(isOpen ? "col-step-form-ifclosed" : "col-side-form-ifopen");
-      col_step_forms[i].classList.add(isOpen ? "col-step-form-ifopen" : "col-side-form-ifclosed");
-    }
-
-    setRerender(!rerender);
-    }
+  const handleClick = () => {
+    dispatch(taggleCol())
+  }
 
   if (isOpen) {
     return (
