@@ -16,7 +16,6 @@ import { useSelector } from 'react-redux';
 
 
 export default function Step2() {
-  const isOpen = useSelector(state => state.isOpen.value);
   const { actions, state } = useStateMachine({ updateAction });
   const { control, handleSubmit, register} = useForm({defaultValues: state.yourDetails});
   const router = useRouter();
@@ -24,7 +23,7 @@ export default function Step2() {
   const { data: session } = useSession()
   
 
-  const {fields, append, remove} = useFieldArray({name: "contacts", rules: { maxLength: 4 }, control});
+  const {fields, append, remove} = useFieldArray({name: "contacts", control});
 
   const onSubmit = (data) => {
     console.log(data);
@@ -36,12 +35,9 @@ export default function Step2() {
     }
   };
 
-  let sideFormClassAdd = "col-side-form-ifclosed";
-  let stepFormClassAdd = "col-step-form-ifclosed";
-  if (isOpen) {
-    sideFormClassAdd = "col-side-form-ifopen";
-    stepFormClassAdd = "col-step-form-ifopen";
-  }
+  const isOpen = useSelector(state => state.isOpen.value);
+  const sideFormClassAdd = isOpen ? "col-side-form-ifopen": "col-side-form-ifclosed";
+  const stepFormClassAdd = isOpen ? "col-step-form-ifopen": "col-step-form-ifclosed";
 
   if (session) {
     return (
@@ -70,8 +66,7 @@ export default function Step2() {
                   <input placeholder="טלפון" {...register(`contacts.${index}.טלפון`)} />
                   <input className="longer-input" placeholder="הערות נוספות" {...register(`contacts.${index}.הערות`)} />
                   <Button type="button" onClick={() => remove(index)}>
-                  <Image src="/minus.png" width="33" height="33" alt="minos" />
-
+                    <Image src="/minus.png" width="33" height="33" alt="minos" />
                   </Button>
                 </div>
               ))}

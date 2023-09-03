@@ -13,7 +13,6 @@ import { useSession } from "next-auth/react"
 import { useSelector } from 'react-redux';
 
 export default function Step3() {
-  const isOpen = useSelector(state => state.isOpen.value);
   const { actions, state } = useStateMachine({ updateAction });
   const { handleSubmit, register, control } = useForm({defaultValues: state.yourDetails});
   const router = useRouter();
@@ -30,12 +29,9 @@ export default function Step3() {
     }
   };
 
-  let sideFormClassAdd = "col-side-form-ifclosed";
-  let stepFormClassAdd = "col-step-form-ifclosed";
-  if (isOpen) {
-    sideFormClassAdd = "col-side-form-ifopen";
-    stepFormClassAdd = "col-step-form-ifopen";
-  }
+  const isOpen = useSelector(state => state.isOpen.value);
+  const sideFormClassAdd = isOpen ? "col-side-form-ifopen": "col-side-form-ifclosed";
+  const stepFormClassAdd = isOpen ? "col-step-form-ifopen": "col-step-form-ifclosed";
 
   if (session) {
     return (

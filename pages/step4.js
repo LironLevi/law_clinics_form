@@ -5,7 +5,7 @@ import updateAction from "/./updateAction";
 import { useRouter} from "next/router";
 import { CREATE_FOLDER_ENDPOINT } from "../config";
 import Navbar from "../components/navbar";
-import SideForm, { isOpen } from "../components/side_form";
+import SideForm from "../components/side_form";
 import SelectByButtons from "../components/select_by_buttons";
 import Textarea from "../components/textarea";
 import Toggle from "../components/Toggle";
@@ -22,13 +22,15 @@ async function postData(data) {
   for (const [key, value] of Object.entries(data)) {
     if(key.includes("קובץ")) formData.append(key, value[0]);
     else if (key == "contacts") {
-      var index = -1;
-      while (index < data["contacts"].length) {
-        formData.append(`איש קשר ${index + 1}: קשר`, data["contacts"][index]["קשר"]);
-        formData.append(`איש קשר ${index + 1}: שם`, data["contacts"][index]["שם"]);
-        formData.append(`איש קשר ${index + 1}: טלפון`, data["contacts"][index]["טלפון"]);
-        formData.append(`איש קשר ${index + 1}: הערות`, data["contacts"][index]["הערות"]);
-        index += 1;
+      if (data["contacts"].length > 0) {
+        let index = -1;
+        while (index < data["contacts"].length) {
+          formData.append(`איש קשר ${index + 1}: קשר`, data["contacts"][index]["קשר"]);
+          formData.append(`איש קשר ${index + 1}: שם`, data["contacts"][index]["שם"]);
+          formData.append(`איש קשר ${index + 1}: טלפון`, data["contacts"][index]["טלפון"]);
+          formData.append(`איש קשר ${index + 1}: הערות`, data["contacts"][index]["הערות"]);
+          index += 1;
+      }
       }
     } else formData.append(key, value);
   }
@@ -52,7 +54,6 @@ async function postData(data) {
 
 
 export default function Step4(){
-  const isOpen = useSelector(state => state.isOpen.value);
   const [show, setShow] = useState(false);
   
   const { actions, state } = useStateMachine({ updateAction });
@@ -87,12 +88,9 @@ export default function Step4(){
     }
   };
 
-  let sideFormClassAdd = "col-side-form-ifclosed";
-  let stepFormClassAdd = "col-step-form-ifclosed";
-  if (isOpen) {
-    sideFormClassAdd = "col-side-form-ifopen";
-    stepFormClassAdd = "col-step-form-ifopen";
-  }
+  const isOpen = useSelector(state => state.isOpen.value);
+  const sideFormClassAdd = isOpen ? "col-side-form-ifopen": "col-side-form-ifclosed";
+  const stepFormClassAdd = isOpen ? "col-step-form-ifopen": "col-step-form-ifclosed";
 
 
   if (session) {

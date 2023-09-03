@@ -14,24 +14,20 @@ import { useSelector } from 'react-redux';
 
 
 export default function Step1() {
-  const isOpen = useSelector((state) => state.isOpen.value);
   const { actions, state } = useStateMachine({ updateAction });
   const { register, formState: {errors}, handleSubmit, control } = useForm({defaultValues: state.yourDetails});
   const router = useRouter();
   const { data: session } = useSession()
- 
+
   const onSubmit = (data) => {
     console.log(data);
     actions.updateAction(data);
     router.push("/step2"); 
   };
 
-  let sideFormClassAdd = "col-side-form-ifclosed";
-  let stepFormClassAdd = "col-step-form-ifclosed";
-  if (isOpen) {
-    sideFormClassAdd = "col-side-form-ifopen";
-    stepFormClassAdd = "col-step-form-ifopen";
-  }
+  const isOpen = useSelector((state) => state.isOpen.value);
+  const sideFormClassAdd = isOpen ? "col-side-form-ifopen": "col-side-form-ifclosed";
+  const stepFormClassAdd = isOpen ? "col-step-form-ifopen": "col-step-form-ifclosed";
 
   if (session) {
     return (
